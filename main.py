@@ -1,3 +1,4 @@
+from random import randrange
 from typing import Optional
 
 from fastapi import FastAPI
@@ -17,6 +18,12 @@ class Post(BaseModel):
     rating: Optional[int] = None
 
 
+my_val = [
+    {"title1": "this is title 1", "content": "this is content 1", "id": 1},
+    {"title2": "this is title 2", "content": "this is content 2", "id": 2},
+]
+
+
 @app.get("/")
 async def root():
     return {"message": "Hello World!"}
@@ -24,7 +31,7 @@ async def root():
 
 @app.get("/posts")
 async def get_posts():
-    return {"information": "This is your post"}
+    return {"Data return": my_val}
 
 
 @app.post("/createposts")
@@ -39,3 +46,11 @@ async def create_posts_val(new_post: Post):
     print(new_post)
     new_post_dict = new_post.dict()
     return {"Valid": "Data upload is valid", "uploaded data is": new_post_dict}
+
+
+@app.post("/posts")
+async def create_post(post: Post):
+    new_post_val = post.dict()
+    new_post_val["id"] = randrange(0, 100000)
+    my_val.append(new_post_val)
+    return {"data upload successful": my_val}
